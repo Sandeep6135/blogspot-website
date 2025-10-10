@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link href="https://unpkg.com/tailwindcss@1.0/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #fcfcfc; /* Light background */
+        }
+        .password-wrapper {
+            position: relative;
+        }
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            height: 20px; /* Adjust height as needed */
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center h-screen">
+    <div class="bg-white flex rounded-lg shadow-md w-full max-w-4xl">
+        <!-- Left Side: Sign Up Fields -->
+        <div class="w-full md:w-1/2 p-8">
+            <h2 class="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+
+            <form id="signUpForm" onsubmit="return handleSubmit(event)">
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Name:</label>
+                    <input type="text" id="name" name="name" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200" aria-required="true">
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+                    <input type="email" id="email" name="email" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200" aria-required="true">
+                </div>
+                <div class="mb-4 password-wrapper">
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
+                    <input type="password" id="password" name="password" required class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200" aria-required="true" oninput="checkPasswordStrength()">
+                    <img id="togglePassword" class="toggle-password" src="Photos/Eye/Eye-close.svg" alt="Toggle password visibility" onclick="togglePasswordVisibility()">
+                    <p id="passwordStrength" class="text-sm text-gray-600"></p>
+                    <div class="mt-1 h-2 bg-gray-200 rounded">
+                        <div id="strengthBar" class="h-full bg-red-500 transition-all duration-300"></div>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-indigo-600 text-white py-2 rounded-md mb-4 hover:bg-indigo-700">Sign Up</button>
+            </form>
+        </div>
+
+        <!-- Right Side: Social Sign Up Buttons -->
+        <div class="hidden md:block w-1/2 bg-blue-100 p-8 flex flex-col items-center justify-center">
+            <h2 class="text-2xl font-bold mb-4 text-center">Join Us!</h2>
+            <p class="text-center mb-8">Already have an account? <a href="sign_in.html" class="text-indigo-600 hover:underline">Sign In</a></p>
+            <div class="mb-6 border-t border-gray-300 w-full"></div>
+            <div class="mb-4 w-full">
+                <button class="w-full bg-blue-700 text-white py-3 rounded-md hover:bg-blue-500 flex items-center justify-center" aria-label="Sign up with Google">
+                    <img src="Photos/Google.svg" alt ="Google logo" class="h-5 mr-2"> Sign up with Google
+                </button>
+            </div>
+            <div class="mb-4 w-full">
+                <button class="w-full bg-blue-700 text-white py-3 rounded-md hover:bg-blue-500 flex items-center justify-center" aria-label="Sign up with Facebook">
+                    <img src="Photos/Facebook.svg" alt="Facebook logo" class="h-5 mr-2"> Sign up with Facebook
+                </button>
+            </div>
+            <div class="mb-4 w-full">
+                <button class="w-full bg-blue-700 text-white py-3 rounded-md hover:bg-blue-500 flex items-center justify-center" aria-label="Sign up with Phone Number">
+                    <img src="Photos/Phone.svg" alt="Phone logo" class="h-5 mr-2"> Sign up with Phone Number
+                </button>
+            </div>
+            <div class="mb-4 w-full">
+                <button class="w-full bg-blue-700 text-white py-3 rounded-md hover:bg-blue-500 flex items-center justify-center" aria-label="Sign up with Apple">
+                    <img src="Photos/Apple.svg" alt="Apple logo" class="h-5 mr-2"> Sign up with Apple
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function validateForm() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!name || !email || !password) {
+                alert('Please fill in all fields.');
+                return false;
+            }
+
+            if (!emailPattern.test(email)) {
+                alert('Please enter a valid email address.');
+                return false;
+            }
+
+            return true; // Allow form submission
+        }
+
+        function checkPasswordStrength() {
+            const password = document.getElementById('password').value;
+            const strengthText = document.getElementById('passwordStrength');
+            const strengthBar = document.getElementById('strengthBar');
+            let strength = 0;
+
+            const lengthCriteria = password.length >= 12;
+            const numberCriteria = /[0-9]/.test(password);
+            const specialCharCriteria = /[!@#$%^&*]/.test(password);
+            const uppercaseCriteria = /[A-Z]/.test(password);
+
+            if (lengthCriteria) strength += 25;
+            if (numberCriteria) strength += 25;
+            if (specialCharCriteria) strength += 25;
+            if (uppercaseCriteria) strength += 25;
+
+            strengthBar.style.width = `${strength}%`;
+
+            if (strength < 50) {
+                strengthText.textContent = 'Password is too weak.';
+                strengthText.className = 'text-red-500';
+                strengthBar.className = 'h-full bg-red-500';
+            } else if (strength < 75) {
+                strengthText.textContent = 'Add more characters and symbols for a stronger password.';
+                strengthText.className = 'text-orange-500';
+                strengthBar.className = 'h-full bg-orange-500';
+            } else {
+                strengthText.textContent = 'Password is strong.';
+                strengthText.className = 'text-green-500';
+                strengthBar.className = 'h-full bg-green-500';
+            }
+        }
+
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('password');
+            const togglePassword = document.getElementById('togglePassword');
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            togglePassword.src = type === 'password' ? 'Photos/Eye/Eye-close.svg' : 'Photos/Eye/Eye-open.svg'; // Change image based on visibility
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+            if (validateForm()) {
+                // Mock form submission (replace with actual submission logic)
+                console.log('Form submitted successfully!');
+                // Reset the form
+                document.getElementById('signUpForm').reset();
+                document.getElementById('strengthBar').style.width = '0%'; // Reset progress bar
+            }
+        }
+    </script>
+</body>
+</html>
